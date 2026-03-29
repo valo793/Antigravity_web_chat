@@ -203,21 +203,21 @@ export default function LoginPage() {
               <div className="flex items-center gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-ag-text-muted" />
                 <span className="text-[10px] tracking-[0.1em] text-ag-text-secondary uppercase">
-                  SECURE CONNECTION
+                  SUPABASE AUTH
                 </span>
               </div>
               <span className="text-[10px] tracking-[0.05em] text-ag-text-dim">
-                NODE_03: 184.18.2.14
+                NEXT.JS 15 // VERCEL
               </span>
             </div>
             <div className="flex gap-4">
               <div className="flex-1 bg-[#0f0f0f] border border-[#1f1f1f] p-3">
-                <p className="text-[9px] tracking-[0.1em] text-ag-text-muted uppercase mb-1">LATENCY</p>
-                <p className="text-xs text-white">14ms</p>
+                <p className="text-[9px] tracking-[0.1em] text-ag-text-muted uppercase mb-1">AUTH</p>
+                <p className="text-xs text-white">EMAIL + OTP</p>
               </div>
               <div className="flex-1 bg-[#0f0f0f] border border-[#1f1f1f] p-3">
-                <p className="text-[9px] tracking-[0.1em] text-ag-text-muted uppercase mb-1">ENCRYPTION</p>
-                <p className="text-xs text-white">TLS 1.3</p>
+                <p className="text-[9px] tracking-[0.1em] text-ag-text-muted uppercase mb-1">DATABASE</p>
+                <p className="text-xs text-white">POSTGRES</p>
               </div>
             </div>
           </div>
@@ -225,9 +225,9 @@ export default function LoginPage() {
 
         {/* Footer */}
         <div className="mt-6 flex justify-between px-2 font-mono text-[9px] tracking-[0.15em] text-ag-text-dim uppercase">
-          <span>SYSTEM_V4.0.2</span>
+          <span>ANTIGRAVITY_OS</span>
           <span>© 2026 ANTIGRAVITY</span>
-          <span>VAULT_LOCKED</span>
+          <span>OPEN SOURCE</span>
         </div>
       </div>
     </div>

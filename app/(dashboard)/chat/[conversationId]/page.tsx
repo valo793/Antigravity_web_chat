@@ -118,7 +118,7 @@ export default function ConversationPage() {
               {agentSlug}
             </h2>
             <p className="text-[9px] font-mono tracking-widest text-zinc-500 uppercase">
-              {conversation?.title || "AWAITING TITLE"} // LATENCY: 14MS
+              {conversation?.title || "AWAITING TITLE"}
             </p>
           </div>
         </div>
@@ -209,12 +209,12 @@ export default function ConversationPage() {
           {/* Status Line */}
           <div className="flex items-center justify-between text-[8px] font-mono tracking-[0.15em] uppercase text-zinc-600 px-2">
             <div className="flex items-center gap-4">
-              <span>PROTOCOL: SSL_V4</span>
-              <span>BUFFER: 4.2KB</span>
+              <span>MESSAGES: {displayMessages.length}</span>
+              <span>SESSION: {agentSlug}</span>
             </div>
             <div className="flex items-center gap-2">
-               <div className="w-3 h-3 rounded-full bg-zinc-800 flex items-center justify-center text-[6px]">i</div>
-               <span>END-TO-END ENCRYPTION ACTIVE</span>
+               <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_4px_rgba(16,185,129,0.3)]" />
+               <span>REALTIME SYNC ACTIVE</span>
             </div>
           </div>
         </div>

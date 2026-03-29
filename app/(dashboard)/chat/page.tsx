@@ -114,12 +114,12 @@ export default function ChatPage() {
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2 text-zinc-500">
                   <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_4px_rgba(16,185,129,0.5)]" />
-                  <span>NEURAL LINK ACTIVE</span>
+                  <span>SUPABASE REALTIME</span>
                 </div>
-                <span>LATENCY: 14MS</span>
+                <span>{conversations.length} SESSIONS</span>
               </div>
               <div className="flex items-center gap-2">
-                 <span>🔒 AES-256 ENCRYPTED</span>
+                 <span>WEBHOOK: /API/WEBHOOKS/ANTIGRAVITY</span>
               </div>
             </div>
           </div>

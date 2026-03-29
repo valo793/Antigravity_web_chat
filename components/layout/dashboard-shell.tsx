@@ -12,8 +12,6 @@ import {
   Plus,
   Box,
   User as UserIcon,
-  Info,
-  Activity,
   Crosshair
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
@@ -194,78 +192,128 @@ export default function DashboardShell({ children, user }: DashboardShellProps) 
           </main>
 
           {/* Right Inspector Panel */}
-          <aside className="w-[300px] bg-[#121212] border-l border-[#262626] flex flex-col shrink-0">
-            {/* Inspector Items Area */}
-            <div className="p-6 flex-1 overflow-y-auto">
-              <h3 className="text-xs font-mono font-bold tracking-[0.2em] uppercase mb-8">OBJECT_INSPECTOR</h3>
-              
-              <div className="mb-8">
-                <p className="text-[9px] font-mono tracking-widest text-zinc-500 mb-3">UNIT_IDENTITY</p>
-                <div className="flex justify-between items-center mb-1">
-                  <span className="text-xs font-mono text-zinc-400">CLASS</span>
-                  <span className="text-xs font-mono text-white">USER_TERMINAL</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-xs font-mono text-zinc-400">ACCESS</span>
-                  <span className="text-xs font-mono text-white">L4_ADMIN</span>
-                </div>
-              </div>
-
-              <div className="mb-8">
-                <p className="text-[9px] font-mono tracking-widest text-zinc-500 mb-3">SYSTEM_LOAD</p>
-                <div className="w-full bg-[#1c1c1c] h-[2px] mb-2">
-                  <div className="bg-white h-full" style={{ width: '12%' }} />
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-[9px] font-mono text-zinc-500 tracking-widest">CPU</span>
-                  <span className="text-[10px] font-mono font-bold">12%</span>
-                </div>
-              </div>
-
-              <div className="space-y-4 font-mono text-xs tracking-wider">
-                <div className="flex justify-between items-center cursor-not-allowed text-zinc-400">
-                  <span className="flex items-center gap-2">VECTOR STORE</span>
-                  <span>{'>'}</span>
-                </div>
-                <div className="flex justify-between items-center cursor-not-allowed text-zinc-400">
-                  <span className="flex items-center gap-2">CORE FREQUENCY</span>
-                  <span>{'>'}</span>
-                </div>
-              </div>
-
-              <div className="mt-10">
-                <p className="text-[9px] font-mono tracking-widest text-zinc-500 mb-3 uppercase">DIAGNOSTIC_FEED</p>
-                <div className="font-mono text-[9px] leading-relaxed text-zinc-500">
-                  <p><span className="text-white">AWAITING_TELEMETRY</span></p>
-                  <p className="animate-pulse">_</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Bottom visualizer area mock */}
-            <div className="h-[120px] border-t border-[#262626] flex items-center justify-center p-4">
-              <div className="w-full h-full bg-[#080808] border border-[#262626] flex items-center justify-center relative overflow-hidden opacity-50">
-                 {/* Visual wave representation */}
-                 <div className="absolute w-[200%] h-[1px] bg-white opacity-20 top-1/2 left-[-50%] transform -translate-y-1/2" />
-                 <div className="w-16 h-16 rounded-full border border-white opacity-10" />
-                 <div className="absolute w-8 h-8 rounded-full border border-white opacity-30" />
-                 <div className="absolute w-2 h-2 rounded-full bg-white opacity-80 shadow-[0_0_8px_4px_rgba(255,255,255,0.4)]" />
-              </div>
-            </div>
-            
-            {/* Small tool icon area mimicking the thin right bar */}
-            <div className="absolute top-0 right-[-48px] w-12 h-full border-l border-[#262626] bg-[#080808] flex flex-col py-4 items-center hidden">
-              <div className="w-6 h-6 rounded-full bg-zinc-800 flex items-center justify-center text-zinc-400 text-xs font-mono font-bold mb-4">i</div>
-              <Activity size={16} className="text-zinc-400 mb-4" />
-              <Crosshair size={16} className="text-zinc-400" />
-              
-              <div className="mt-auto">
-                <HelpCircle size={16} className="text-zinc-400" />
-              </div>
-            </div>
-          </aside>
+          <InspectorPanel user={user} />
         </div>
       </div>
     </div>
+  );
+}
+
+/* ---- Inspector Panel (real data) ---- */
+function InspectorPanel({ user }: { user: User }) {
+  const [stats, setStats] = useState<any>(null);
+
+  useEffect(() => {
+    fetch("/api/analytics")
+      .then((r) => r.ok ? r.json() : null)
+      .then(setStats)
+      .catch(() => {});
+  }, []);
+
+  const s = stats?.summary;
+
+  return (
+    <aside className="w-[300px] bg-[#121212] border-l border-[#262626] flex flex-col shrink-0">
+      <div className="p-6 flex-1 overflow-y-auto">
+        <h3 className="text-xs font-mono font-bold tracking-[0.2em] uppercase mb-8">OBJECT_INSPECTOR</h3>
+
+        {/* User identity — real data */}
+        <div className="mb-8">
+          <p className="text-[9px] font-mono tracking-widest text-zinc-500 mb-3">UNIT_IDENTITY</p>
+          <div className="flex justify-between items-center mb-1">
+            <span className="text-xs font-mono text-zinc-400">USER</span>
+            <span className="text-xs font-mono text-white truncate ml-2 max-w-[160px]">{user.email || "UNKNOWN"}</span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="text-xs font-mono text-zinc-400">SESSION</span>
+            <span className="text-xs font-mono text-white">{user.id.substring(0, 8).toUpperCase()}</span>
+          </div>
+        </div>
+
+        {/* Real stats */}
+        {s ? (
+          <>
+            <div className="mb-8">
+              <p className="text-[9px] font-mono tracking-widest text-zinc-500 mb-3">ACTIVITY</p>
+              <div className="w-full bg-[#1c1c1c] h-[2px] mb-2">
+                <div className="bg-white h-full transition-all" style={{ width: `${Math.min((s.total_messages / Math.max(s.total_messages, 100)) * 100, 100)}%` }} />
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-[9px] font-mono text-zinc-500 tracking-widest">MESSAGES</span>
+                <span className="text-[10px] font-mono font-bold">{s.total_messages}</span>
+              </div>
+            </div>
+
+            <div className="space-y-3 font-mono text-xs tracking-wider">
+              <div className="flex justify-between items-center text-zinc-400">
+                <span>CONVERSATIONS</span>
+                <span className="text-white font-bold">{s.total_conversations}</span>
+              </div>
+              <div className="flex justify-between items-center text-zinc-400">
+                <span>AGENTS</span>
+                <span className="text-white font-bold">{s.active_agents}/{s.total_agents}</span>
+              </div>
+              <div className="flex justify-between items-center text-zinc-400">
+                <span>UNREAD</span>
+                <span className="text-white font-bold">{s.unread_notifications}</span>
+              </div>
+              <div className="flex justify-between items-center text-zinc-400">
+                <span>AVG MSG/CONV</span>
+                <span className="text-white font-bold">{s.avg_messages_per_conversation}</span>
+              </div>
+            </div>
+          </>
+        ) : (
+          <div className="text-[9px] font-mono text-zinc-600 animate-pulse">LOADING_TELEMETRY...</div>
+        )}
+
+        {/* Webhook health */}
+        {stats?.webhook && (
+          <div className="mt-8">
+            <p className="text-[9px] font-mono tracking-widest text-zinc-500 mb-3 uppercase">WEBHOOK_HEALTH</p>
+            <div className="space-y-2 font-mono text-[10px]">
+              <div className="flex justify-between items-center">
+                <div className="flex items-center gap-1.5">
+                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                  <span className="text-zinc-400">OK</span>
+                </div>
+                <span className="text-white font-bold">{stats.webhook.success}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <div className="flex items-center gap-1.5">
+                  <div className="w-1.5 h-1.5 rounded-full bg-red-500" />
+                  <span className="text-zinc-400">FAIL</span>
+                </div>
+                <span className="text-white font-bold">{stats.webhook.failed}</span>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Activity visualizer */}
+      <div className="h-[100px] border-t border-[#262626] p-4">
+        {stats?.daily_activity ? (
+          <div className="w-full h-full flex items-end gap-[1px]">
+            {stats.daily_activity.slice(-14).map((d: any, i: number) => {
+              const max = Math.max(...stats.daily_activity.map((x: any) => x.total), 1);
+              const h = Math.max((d.total / max) * 60, 2);
+              return (
+                <div
+                  key={i}
+                  className="flex-1 bg-white transition-all hover:bg-zinc-300"
+                  style={{ height: `${h}px`, opacity: d.total === 0 ? 0.1 : 0.6 }}
+                  title={`${d.date}: ${d.total} msg`}
+                />
+              );
+            })}
+          </div>
+        ) : (
+          <div className="w-full h-full bg-[#080808] border border-[#262626] flex items-center justify-center">
+            <div className="w-2 h-2 rounded-full bg-white opacity-50 animate-pulse" />
+          </div>
+        )}
+      </div>
+    </aside>
   );
 }

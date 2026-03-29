@@ -2,11 +2,13 @@
 
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { Eye, EyeOff, Copy, Shield, Zap, Database } from "lucide-react";
+import { Eye, EyeOff, Copy, Shield } from "lucide-react";
 
 export default function SettingsPage() {
   const [showSecret, setShowSecret] = useState(false);
   const [agents, setAgents] = useState<any[]>([]);
+  const [stats, setStats] = useState<any>(null);
+  const [copied, setCopied] = useState(false);
   const supabase = createClient();
 
   useEffect(() => {
@@ -15,6 +17,11 @@ export default function SettingsPage() {
       setAgents(data || []);
     };
     fetchAgents();
+
+    fetch("/api/analytics")
+      .then((r) => r.ok ? r.json() : null)
+      .then(setStats)
+      .catch(() => {});
   }, [supabase]);
 
   const webhookUrl = typeof window !== "undefined"
@@ -23,90 +30,91 @@ export default function SettingsPage() {
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
-  return (
-    <div className="h-full overflow-auto">
-      <div className="max-w-4xl mx-auto px-6 py-8">
-        {/* Title */}
-        <div className="mb-8">
-          <h1 className="text-display mb-2">Operational Parameters</h1>
-          <p className="text-body" style={{ color: "var(--color-ag-text-secondary)" }}>
-            Manage autonomous agents and secure communication protocols for the Antigravity ecosystem.
-          </p>
-        </div>
+  const s = stats?.summary;
+  const wh = stats?.webhook;
 
-        {/* System status */}
-        <div className="flex justify-end mb-6">
-          <div className="flex items-center gap-2 px-3 py-1.5" style={{ border: "1px solid var(--color-ag-border)", background: "var(--color-ag-surface)" }}>
-            <span className="ag-status-dot ag-status-dot-active" />
-            <span className="text-caption">SYSTEM UPLINK: ACTIVE</span>
-          </div>
+  return (
+    <div className="h-full overflow-auto bg-[#121212] p-8">
+      <div className="max-w-4xl mx-auto">
+        {/* Title */}
+        <div className="mb-10">
+          <h1 className="text-lg font-bold tracking-[0.15em] font-mono text-white uppercase mb-2">OPERATIONAL_PARAMETERS</h1>
+          <p className="text-[10px] font-mono tracking-widest text-zinc-500 uppercase">
+            Manage agents and webhook configuration
+          </p>
         </div>
 
         {/* ---- Agents Section ---- */}
         <section className="mb-10">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-heading">AUTONOMOUS AGENTS</h2>
-            <span className="text-caption">
+          <div className="flex items-center justify-between mb-5">
+            <h2 className="text-xs font-mono font-bold tracking-[0.2em] text-white uppercase">AUTONOMOUS AGENTS</h2>
+            <span className="text-[9px] font-mono tracking-widest text-zinc-500">
               {agents.filter((a) => a.is_active).length} ACTIVE / {agents.length.toString().padStart(2, "0")} TOTAL
             </span>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            {agents.map((agent) => (
-              <div key={agent.id} className="ag-card">
-                <div className="flex items-center justify-between mb-3">
-                  <h3
-                    className="text-sm font-bold"
-                    style={{ fontFamily: "var(--font-mono)", color: "var(--color-ag-text)" }}
-                  >
-                    {agent.name.toUpperCase().replace(/\s+/g, "_")}
-                  </h3>
-                  <span className={`ag-badge ${agent.is_active ? "ag-badge-success" : ""}`}>
-                    {agent.is_active ? "ACTIVE" : "INACTIVE"}
-                  </span>
-                </div>
-                <div className="space-y-1 mb-3">
-                  <div className="flex justify-between text-caption">
-                    <span>ID:</span>
-                    <span style={{ color: "var(--color-ag-text-secondary)" }}>
-                      #{agent.id.substring(0, 8).toUpperCase()}
-                    </span>
+          {agents.length === 0 ? (
+            <div className="bg-[#1c1c1c] border border-[#262626] p-8 text-center">
+              <p className="text-[10px] font-mono tracking-widest text-zinc-500">NO_AGENTS_REGISTERED</p>
+              <p className="text-[9px] font-mono text-zinc-600 mt-1">Agents are created automatically when webhooks arrive</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              {agents.map((agent) => {
+                // Find agent stats from analytics
+                const agentStats = stats?.agent_ranking?.find((a: any) => a.id === agent.id);
+                return (
+                  <div key={agent.id} className="bg-[#1c1c1c] border border-[#262626] p-4">
+                    <div className="flex items-center justify-between mb-3">
+                      <h3 className="text-[11px] font-mono font-bold tracking-widest text-white uppercase">
+                        {agent.name.toUpperCase().replace(/\s+/g, "_")}
+                      </h3>
+                      <div className={`flex items-center gap-1.5 px-2 py-0.5 ${agent.is_active ? "bg-emerald-950/30 border border-emerald-900/50" : "bg-zinc-900 border border-zinc-800"}`}>
+                        <div className={`w-1 h-1 rounded-full ${agent.is_active ? "bg-emerald-500" : "bg-zinc-600"}`} />
+                        <span className={`text-[8px] font-mono font-bold tracking-widest ${agent.is_active ? "text-emerald-400" : "text-zinc-500"}`}>
+                          {agent.is_active ? "ACTIVE" : "INACTIVE"}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="space-y-1.5 text-[10px] font-mono">
+                      <div className="flex justify-between">
+                        <span className="text-zinc-500">SLUG</span>
+                        <span className="text-zinc-300">{agent.slug}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-zinc-500">MESSAGES</span>
+                        <span className="text-white font-bold">{agentStats?.message_count ?? 0}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-zinc-500">SESSIONS</span>
+                        <span className="text-white font-bold">{agentStats?.conversation_count ?? 0}</span>
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex justify-between text-caption">
-                    <span>LAST OP</span>
-                    <span style={{ color: "var(--color-ag-text-secondary)" }}>—</span>
-                  </div>
-                  <div className="flex justify-between text-caption">
-                    <span>LATENCY</span>
-                    <span style={{ color: "var(--color-ag-text-secondary)" }}>14ms</span>
-                  </div>
-                </div>
-                <button className="ag-btn w-full text-xs py-2">CONFIG</button>
-              </div>
-            ))}
-          </div>
+                );
+              })}
+            </div>
+          )}
         </section>
 
-        <hr className="ag-divider" />
+        <div className="border-t border-[#262626] my-8" />
 
-        {/* ---- External Protocols ---- */}
-        <section className="mb-10 mt-8">
+        {/* ---- Webhook Config ---- */}
+        <section className="mb-10">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div>
-              <h2 className="text-heading mb-2">EXTERNAL PROTOCOLS</h2>
-              <p className="text-body mb-4" style={{ color: "var(--color-ag-text-secondary)" }}>
-                Securely bridge Antigravity with third-party providers. All API keys are encrypted at rest and never exposed in plain text.
+              <h2 className="text-xs font-mono font-bold tracking-[0.2em] text-white uppercase mb-2">WEBHOOK_CONFIG</h2>
+              <p className="text-[10px] font-mono tracking-wider text-zinc-500 mb-4">
+                Configure the endpoint for receiving agent messages. Point your Antigravity system to this URL.
               </p>
               <div className="flex items-center gap-3 mt-4">
                 <div className="flex items-center gap-1.5">
-                  <Shield size={14} style={{ color: "var(--color-ag-text-muted)" }} />
-                  <span className="text-caption">AES-256 ENCRYPTED</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <span className="ag-status-dot ag-status-dot-idle" />
-                  <span className="text-caption">TLS 1.3 MANDATORY</span>
+                  <Shield size={12} className="text-zinc-500" />
+                  <span className="text-[9px] font-mono tracking-widest text-zinc-500">HMAC-SHA256 VERIFIED</span>
                 </div>
               </div>
             </div>
@@ -115,41 +123,41 @@ export default function SettingsPage() {
               {/* Webhook URL */}
               <div>
                 <div className="flex items-center justify-between mb-1.5">
-                  <label className="text-label">EVENT WEBHOOK URL</label>
-                  <span className="text-caption" style={{ color: "var(--color-ag-success)" }}>VERIFIED</span>
+                  <label className="text-[10px] font-mono font-bold tracking-widest text-zinc-400 uppercase">WEBHOOK URL</label>
+                  {copied && <span className="text-[9px] font-mono text-emerald-400">COPIED</span>}
                 </div>
                 <div className="flex gap-2">
                   <input
                     type="text"
                     value={webhookUrl}
                     readOnly
-                    className="ag-input flex-1"
+                    className="flex-1 bg-[#080808] border border-[#262626] text-white font-mono text-xs py-2.5 px-3 outline-none"
                   />
                   <button
                     onClick={() => copyToClipboard(webhookUrl)}
-                    className="ag-btn px-3"
+                    className="bg-[#1c1c1c] border border-[#262626] px-3 text-zinc-400 hover:text-white hover:bg-[#262626] transition-colors"
                   >
                     <Copy size={14} />
                   </button>
                 </div>
-                <p className="text-caption mt-1" style={{ color: "var(--color-ag-text-dim)" }}>
-                  POST request payload will be sent as application/json.
+                <p className="text-[8px] font-mono tracking-widest text-zinc-600 mt-1">
+                  POST APPLICATION/JSON
                 </p>
               </div>
 
               {/* Webhook secret */}
               <div>
-                <label className="text-label block mb-1.5">BEARER AUTH TOKEN</label>
+                <label className="text-[10px] font-mono font-bold tracking-widest text-zinc-400 uppercase block mb-1.5">SECRET</label>
                 <div className="flex gap-2">
                   <input
                     type={showSecret ? "text" : "password"}
-                    value="Configure via ANTIGRAVITY_WEBHOOK_SECRET env"
+                    value="Defined in ANTIGRAVITY_WEBHOOK_SECRET env var"
                     readOnly
-                    className="ag-input flex-1"
+                    className="flex-1 bg-[#080808] border border-[#262626] text-zinc-500 font-mono text-xs py-2.5 px-3 outline-none"
                   />
                   <button
                     onClick={() => setShowSecret(!showSecret)}
-                    className="ag-btn px-3"
+                    className="bg-[#1c1c1c] border border-[#262626] px-3 text-zinc-400 hover:text-white hover:bg-[#262626] transition-colors"
                   >
                     {showSecret ? <EyeOff size={14} /> : <Eye size={14} />}
                   </button>
@@ -159,32 +167,39 @@ export default function SettingsPage() {
           </div>
         </section>
 
-        <hr className="ag-divider" />
+        <div className="border-t border-[#262626] my-8" />
 
-        {/* ---- System Metrics ---- */}
-        <section className="mt-8">
+        {/* ---- Real Metrics ---- */}
+        <section>
+          <h2 className="text-xs font-mono font-bold tracking-[0.2em] text-white uppercase mb-5">SYSTEM_METRICS</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            {[
-              { icon: Zap, label: "TOKEN QUOTA", value: "644,213 / 1,000,000", bar: 64 },
-              { icon: Database, label: "BURST CAPACITY", value: "400 RPM", sub: "CURRENT LOAD: LOW" },
-              { icon: Shield, label: "LOG PERSISTENCE", value: "30 DAYS", sub: "STORAGE USAGE: 14.2 GB" },
-            ].map((metric) => (
-              <div key={metric.label} className="ag-card">
-                <metric.icon size={18} className="mb-3" style={{ color: "var(--color-ag-text-muted)" }} />
-                <p className="text-label mb-1">{metric.label}</p>
-                <p className="text-lg font-bold" style={{ color: "var(--color-ag-text)" }}>
-                  {metric.value}
-                </p>
-                {metric.bar && (
-                  <div className="mt-2 h-1" style={{ background: "var(--color-ag-border)" }}>
-                    <div className="h-full" style={{ width: `${metric.bar}%`, background: "var(--color-ag-accent)" }} />
+            <div className="bg-[#1c1c1c] border border-[#262626] p-5">
+              <p className="text-[9px] font-mono tracking-widest text-zinc-500 mb-2">TOTAL MESSAGES</p>
+              <p className="text-2xl font-bold font-mono text-white">{s?.total_messages?.toLocaleString() ?? "—"}</p>
+              {s && (
+                <div className="mt-2 text-[8px] font-mono text-zinc-600 space-y-0.5">
+                  <p>USER: {s.user_messages} // AGENT: {s.agent_messages}</p>
+                </div>
+              )}
+            </div>
+            <div className="bg-[#1c1c1c] border border-[#262626] p-5">
+              <p className="text-[9px] font-mono tracking-widest text-zinc-500 mb-2">WEBHOOK EVENTS</p>
+              <p className="text-2xl font-bold font-mono text-white">{wh?.total?.toLocaleString() ?? "—"}</p>
+              {wh && wh.total > 0 && (
+                <div className="mt-2">
+                  <div className="w-full h-[3px] bg-[#262626] flex">
+                    <div className="h-full bg-emerald-500" style={{ width: `${(wh.success / wh.total) * 100}%` }} />
+                    <div className="h-full bg-red-500" style={{ width: `${(wh.failed / wh.total) * 100}%` }} />
                   </div>
-                )}
-                {metric.sub && (
-                  <p className="text-caption mt-2">{metric.sub}</p>
-                )}
-              </div>
-            ))}
+                  <p className="text-[8px] font-mono text-zinc-600 mt-1">{Math.round((wh.success / wh.total) * 100)}% SUCCESS</p>
+                </div>
+              )}
+            </div>
+            <div className="bg-[#1c1c1c] border border-[#262626] p-5">
+              <p className="text-[9px] font-mono tracking-widest text-zinc-500 mb-2">AVG RESPONSE</p>
+              <p className="text-2xl font-bold font-mono text-white">{s?.avg_response_length?.toLocaleString() ?? "—"}</p>
+              <p className="text-[8px] font-mono text-zinc-600 mt-2">CHARACTERS PER AGENT MSG</p>
+            </div>
           </div>
         </section>
       </div>

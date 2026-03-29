@@ -1,0 +1,481 @@
+@import "tailwindcss";
+
+/* =========================================================
+   ANTIGRAVITY CHAT — Design System
+   Console-premium, dark-first, technical aesthetic
+   ========================================================= */
+
+@theme inline {
+  --font-mono: "JetBrains Mono", "Fira Code", "SF Mono", "Cascadia Code", monospace;
+  --font-sans: "Inter", "SF Pro Display", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+
+  /* Core palette - dark console brutalist */
+  --color-ag-black: #020202;
+  --color-ag-bg: #080808;
+  --color-ag-surface: #121212;
+  --color-ag-surface-raised: #1c1c1c;
+  --color-ag-border: #262626;
+  --color-ag-border-bright: #3f3f46;
+
+  /* Text hierarchy */
+  --color-ag-text: #ffffff;
+  --color-ag-text-secondary: #a1a1aa;
+  --color-ag-text-muted: #71717a;
+  --color-ag-text-dim: #3f3f46;
+
+  /* Accents - stark white */
+  --color-ag-accent: #ffffff;
+  --color-ag-accent-hover: #e4e4e7;
+  --color-ag-accent-glow: rgba(255, 255, 255, 0.15);
+  
+  --color-ag-success: #10b981;
+  --color-ag-warning: #f59e0b;
+  --color-ag-error: #ef4444;
+
+  /* Spacing scale */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --spacing-2xl: 3rem;
+}
+
+/* ---- Global resets ---- */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-ag-bg);
+  color: var(--color-ag-text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow: hidden;
+  height: 100vh;
+}
+
+/* ---- Scrollbar ---- */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-ag-border-bright);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-ag-text-muted);
+}
+
+/* ---- Selection ---- */
+::selection {
+  background: var(--color-ag-accent);
+  color: white;
+}
+
+/* =========================================================
+   Typography
+   ========================================================= */
+
+@layer components {
+  .text-display {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--color-ag-text);
+  }
+
+  .text-heading {
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    color: var(--color-ag-text);
+  }
+
+  .text-label {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-ag-text-secondary);
+  }
+
+  .text-body {
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1.6;
+    color: var(--color-ag-text);
+  }
+
+  .text-caption {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: var(--color-ag-text-muted);
+  }
+
+  /* =========================================================
+     Layout Components
+     ========================================================= */
+
+  .ag-sidebar {
+    background: var(--color-ag-black);
+    border-right: 1px solid var(--color-ag-border);
+    width: 220px;
+    min-width: 220px;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .ag-topbar {
+    background: var(--color-ag-bg);
+    border-bottom: 1px solid var(--color-ag-border);
+    height: 56px;
+    display: flex;
+    align-items: center;
+    padding: 0 1.5rem;
+    gap: 1rem;
+  }
+
+  .ag-main {
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    background: var(--color-ag-bg);
+  }
+
+  /* =========================================================
+     Interactive Elements
+     ========================================================= */
+
+  .ag-btn {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0.625rem 1.25rem;
+    border: 1px solid var(--color-ag-border-bright);
+    background: var(--color-ag-surface);
+    color: var(--color-ag-text);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .ag-btn:hover {
+    border-color: var(--color-ag-text-muted);
+    background: var(--color-ag-surface-raised);
+  }
+
+  .ag-btn:active {
+    transform: scale(0.98);
+  }
+
+  .ag-btn-primary {
+    background: var(--color-ag-text);
+    color: var(--color-ag-bg);
+    border-color: var(--color-ag-text);
+  }
+
+  .ag-btn-primary:hover {
+    background: var(--color-ag-text-secondary);
+    border-color: var(--color-ag-text-secondary);
+  }
+
+  .ag-btn-accent {
+    background: var(--color-ag-accent);
+    color: white;
+    border-color: var(--color-ag-accent);
+  }
+
+  .ag-btn-accent:hover {
+    background: var(--color-ag-accent-hover);
+    border-color: var(--color-ag-accent-hover);
+  }
+
+  /* Input */
+  .ag-input {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    background: var(--color-ag-surface);
+    border: 1px solid var(--color-ag-border);
+    color: var(--color-ag-text);
+    padding: 0.625rem 0.875rem;
+    width: 100%;
+    outline: none;
+    transition: border-color 0.15s ease;
+  }
+
+  .ag-input::placeholder {
+    color: var(--color-ag-text-muted);
+    font-style: normal;
+  }
+
+  .ag-input:focus {
+    border-color: var(--color-ag-accent);
+    box-shadow: 0 0 0 1px var(--color-ag-accent-glow);
+  }
+
+  /* Card */
+  .ag-card {
+    background: var(--color-ag-surface);
+    border: 1px solid var(--color-ag-border);
+    padding: 1.25rem;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+  }
+
+  .ag-card:hover {
+    border-color: var(--color-ag-border-bright);
+  }
+
+  .ag-card-interactive {
+    cursor: pointer;
+  }
+
+  .ag-card-interactive:hover {
+    background: var(--color-ag-surface-raised);
+    border-color: var(--color-ag-border-bright);
+  }
+
+  /* Badge */
+  .ag-badge {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 0.125rem 0.5rem;
+    border: 1px solid var(--color-ag-border-bright);
+    background: var(--color-ag-surface-raised);
+    color: var(--color-ag-text-secondary);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .ag-badge-accent {
+    background: var(--color-ag-accent);
+    border-color: var(--color-ag-accent);
+    color: white;
+  }
+
+  .ag-badge-success {
+    background: rgba(34, 197, 94, 0.15);
+    border-color: rgba(34, 197, 94, 0.3);
+    color: var(--color-ag-success);
+  }
+
+  .ag-badge-error {
+    background: rgba(239, 68, 68, 0.15);
+    border-color: rgba(239, 68, 68, 0.3);
+    color: var(--color-ag-error);
+  }
+
+  /* Unread counter */
+  .ag-unread {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    font-weight: 700;
+    min-width: 18px;
+    height: 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 0.25rem;
+    background: var(--color-ag-accent);
+    color: white;
+    border-radius: 2px;
+  }
+
+  /* =========================================================
+     Message bubbles
+     ========================================================= */
+
+  .ag-msg {
+    padding: 0.875rem 1rem;
+    max-width: 680px;
+    border: 1px solid var(--color-ag-border);
+  }
+
+  .ag-msg-agent {
+    background: var(--color-ag-surface);
+    border-left: 2px solid var(--color-ag-accent);
+  }
+
+  .ag-msg-user {
+    background: var(--color-ag-surface-raised);
+    border-right: 2px solid var(--color-ag-text-muted);
+    margin-left: auto;
+  }
+
+  .ag-msg-system {
+    background: transparent;
+    border: 1px dashed var(--color-ag-border);
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-ag-text-muted);
+    max-width: 100%;
+  }
+
+  /* Code block inside message */
+  .ag-msg pre {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    background: var(--color-ag-black);
+    border: 1px solid var(--color-ag-border);
+    padding: 0.75rem;
+    margin: 0.5rem 0;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  /* =========================================================
+     Navigation items
+     ========================================================= */
+
+  .ag-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 1rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--color-ag-text-secondary);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    border-left: 2px solid transparent;
+  }
+
+  .ag-nav-item:hover {
+    color: var(--color-ag-text);
+    background: var(--color-ag-surface);
+  }
+
+  .ag-nav-item-active {
+    color: var(--color-ag-text);
+    background: var(--color-ag-surface);
+    border-left-color: var(--color-ag-accent);
+  }
+
+  /* =========================================================
+     Toast / Notification popup
+     ========================================================= */
+
+  .ag-toast {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 100;
+    background: var(--color-ag-surface-raised);
+    border: 1px solid var(--color-ag-border-bright);
+    padding: 0.875rem 1rem;
+    max-width: 360px;
+    animation: ag-slide-in 0.3s ease-out;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+  }
+
+  @keyframes ag-slide-in {
+    from {
+      opacity: 0;
+      transform: translateX(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  /* =========================================================
+     Status indicators
+     ========================================================= */
+
+  .ag-status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+  }
+
+  .ag-status-dot-active {
+    background: var(--color-ag-success);
+    box-shadow: 0 0 6px rgba(34, 197, 94, 0.4);
+  }
+
+  .ag-status-dot-error {
+    background: var(--color-ag-error);
+    box-shadow: 0 0 6px rgba(239, 68, 68, 0.4);
+  }
+
+  .ag-status-dot-idle {
+    background: var(--color-ag-text-muted);
+  }
+
+  /* =========================================================
+     Loading / Skeleton
+     ========================================================= */
+
+  @keyframes ag-pulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 0.15; }
+  }
+
+  .ag-skeleton {
+    background: var(--color-ag-surface);
+    animation: ag-pulse 1.8s ease-in-out infinite;
+  }
+
+  /* Typing indicator */
+  @keyframes ag-blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  .ag-cursor-blink::after {
+    content: "█";
+    animation: ag-blink 1s step-end infinite;
+    color: var(--color-ag-accent);
+    font-size: 0.75em;
+    margin-left: 2px;
+  }
+
+  /* =========================================================
+     Divider
+     ========================================================= */
+
+  .ag-divider {
+    height: 1px;
+    background: var(--color-ag-border);
+    margin: 0;
+    border: none;
+  }
+}
+
+/* =========================================================
+   Google Fonts — loaded via next/font in layout.tsx
+   These are fallback definitions only
+   ========================================================= */

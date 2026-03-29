@@ -89,7 +89,10 @@ export default function DashboardShell({ children, user }: DashboardShellProps) 
 
         {/* Action Button */}
         <div className="px-4 py-2 mb-4">
-          <button className="w-full bg-white text-black flex items-center justify-center gap-2 py-3 font-mono text-[10px] font-bold tracking-widest uppercase hover:bg-zinc-200 transition-colors cursor-pointer">
+          <button 
+            onClick={() => window.alert("[ANTIGRAVITY_OS]\n\nERROR_403: MANUAL_CREATION_LOCKED.\nInstances are provisioned automatically via incoming webhooks.")}
+            className="w-full bg-white text-black flex items-center justify-center gap-2 py-3 font-mono text-[10px] font-bold tracking-widest uppercase hover:bg-zinc-200 transition-colors cursor-pointer"
+          >
             <Plus size={14} strokeWidth={2.5} />
             NEW INSTANCE
           </button>
@@ -124,11 +127,11 @@ export default function DashboardShell({ children, user }: DashboardShellProps) 
 
         {/* Footer Navigation */}
         <div className="p-4 border-t border-[#262626]">
-          <Link href="#" className="flex items-center gap-3 px-3 py-2 text-zinc-500 hover:text-white font-mono text-[10px] font-semibold tracking-widest transition-colors">
+          <Link href="#" className="flex items-center gap-3 px-3 py-2 text-zinc-500 hover:text-white font-mono text-[10px] font-semibold tracking-widest transition-colors" onClick={(e) => { e.preventDefault(); window.alert("[ANTIGRAVITY_OS]\n\nDOCS_SERVER_OFFLINE."); }}>
             <Archive size={14} />
             DOCUMENTATION
           </Link>
-          <Link href="#" className="flex items-center gap-3 px-3 py-2 text-zinc-500 hover:text-white font-mono text-[10px] font-semibold tracking-widest transition-colors">
+          <Link href="#" className="flex items-center gap-3 px-3 py-2 text-zinc-500 hover:text-white font-mono text-[10px] font-semibold tracking-widest transition-colors" onClick={(e) => { e.preventDefault(); window.alert("[ANTIGRAVITY_OS]\n\nSUPPORT_LINK_UNAVAILABLE."); }}>
             <HelpCircle size={14} />
             SUPPORT
           </Link>
@@ -142,20 +145,25 @@ export default function DashboardShell({ children, user }: DashboardShellProps) 
           <div className="flex items-center gap-8 border-b-2 border-transparent h-full">
             <h1 className="font-bold text-lg tracking-[0.2em] font-mono translate-y-[1px]">ANTIGRAVITY</h1>
             <nav className="flex items-center gap-6 h-full ml-2">
-              {["Console", "Network", "Vault"].map((tab) => {
-                const isActive = getPageTitle() === tab;
+              {[
+                { label: "Console", href: "/chat" }, 
+                { label: "Vault", href: "/agents" },
+                { label: "Network", href: "/notifications" }
+              ].map((tab) => {
+                const isActive = getPageTitle() === tab.label;
                 return (
-                  <button
-                    key={tab}
+                  <Link
+                    key={tab.label}
+                    href={tab.href}
                     className={`h-full flex items-center text-[11px] font-mono tracking-widest uppercase transition-colors relative ${
                       isActive ? "text-white" : "text-zinc-500 hover:text-zinc-300"
                     }`}
                   >
-                    {tab}
+                    {tab.label}
                     {isActive && (
                       <div className="absolute bottom-0 left-0 w-full h-[2px] bg-white" />
                     )}
-                  </button>
+                  </Link>
                 );
               })}
             </nav>
@@ -169,14 +177,15 @@ export default function DashboardShell({ children, user }: DashboardShellProps) 
               </div>
             </div>
             
-            <button className="text-zinc-400 hover:text-white transition-colors">
+            <Link href="/agents" title="Agents Vault" className="text-zinc-400 hover:text-white transition-colors">
               <Box size={18} />
-            </button>
-            <button className="text-zinc-400 hover:text-white transition-colors">
+            </Link>
+            <Link href="/settings" title="System Settings" className="text-zinc-400 hover:text-white transition-colors">
               <Settings size={18} />
-            </button>
+            </Link>
             <button 
               onClick={handleLogout}
+              title="Terminate Session"
               className="w-7 h-7 bg-zinc-800 flex items-center justify-center rounded-full hover:bg-zinc-700 transition-colors"
             >
               <UserIcon size={14} className="text-white" />

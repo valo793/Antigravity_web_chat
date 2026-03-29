@@ -96,13 +96,23 @@ export default function ChatPage() {
               
               <div className="flex items-center px-4 py-3 bg-[#121212]">
                 <div className="flex gap-3 text-zinc-600 mr-4">
-                  <Paperclip size={14} className="hover:text-white cursor-pointer" />
-                  <Settings2 size={14} className="hover:text-white cursor-pointer" />
-                  <Shield size={14} className="hover:text-white cursor-pointer" />
+                  <button onClick={() => window.alert("[ANTIGRAVITY_OS]\n\nATTACHMENTS_OFFLINE.")} className="hover:text-white cursor-pointer transition-colors" title="Attach Data">
+                    <Paperclip size={14} />
+                  </button>
+                  <button onClick={() => window.alert("[ANTIGRAVITY_OS]\n\nPARAMETERS_UNAVAILABLE_WITHOUT_SESSION.")} className="hover:text-white cursor-pointer transition-colors" title="Configure">
+                    <Settings2 size={14} />
+                  </button>
+                  <button onClick={() => window.alert("[ANTIGRAVITY_OS]\n\nSECURITY_POLICIES_INACTIVE.")} className="hover:text-white cursor-pointer transition-colors" title="Security Settings">
+                    <Shield size={14} />
+                  </button>
                 </div>
                 <div className="flex-1 flex justify-end items-center gap-4">
-                   <span className="text-[9px] font-mono font-bold tracking-widest text-zinc-600 uppercase">OFFLINE MODE</span>
-                   <button className="bg-[#1c1c1c] text-zinc-400 border border-[#262626] px-4 py-1.5 text-[9px] font-mono font-bold tracking-widest uppercase hover:bg-zinc-800 hover:text-white transition-colors">
+                   <span className="text-[9px] font-mono font-bold tracking-widest text-zinc-600 uppercase" title="Awaiting incoming Webhooks">OFFLINE MODE</span>
+                   <button 
+                     onClick={() => window.alert("[ANTIGRAVITY_OS]\n\nERROR_403: AWAITING_ACTIVE_SESSION.\nPlease select an active session on the left to transmit commands.")}
+                     className="bg-[#1c1c1c] text-zinc-400 border border-[#262626] px-4 py-1.5 text-[9px] font-mono font-bold tracking-widest uppercase hover:bg-zinc-800 hover:text-white transition-colors"
+                     title="Execute Command"
+                   >
                      EXECUTE
                    </button>
                 </div>

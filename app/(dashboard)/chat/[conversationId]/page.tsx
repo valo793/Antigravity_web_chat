@@ -124,7 +124,12 @@ export default function ConversationPage() {
         </div>
         <div className="flex items-center gap-6 font-mono text-[9px] font-bold tracking-widest text-zinc-500">
           {["LOGS", "PARAMETERS"].map((tab) => (
-            <button key={tab} className="hover:text-white transition-colors uppercase cursor-not-allowed">
+            <button 
+              key={tab} 
+              onClick={() => window.alert(`[ANTIGRAVITY_OS]\n\nACCESS_DENIED: L4_CLEARANCE_REQUIRED_FOR_${tab}`)}
+              className="hover:text-white transition-colors uppercase cursor-not-allowed"
+              title={`View ${tab}`}
+            >
               {tab}
             </button>
           ))}
@@ -177,9 +182,14 @@ export default function ConversationPage() {
         <div className="max-w-4xl mx-auto">
           {/* Main Input Box */}
           <div className="bg-[#18181b] border border-[#262626] rounded-md flex px-2 py-2 mb-3 shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
-            <div className="flex items-center justify-center w-10 text-zinc-500">
+            <button 
+              type="button"
+              onClick={() => window.alert("[ANTIGRAVITY_OS]\n\nDATA_ATTACHMENT_OFFLINE")}
+              className="flex items-center justify-center w-10 text-zinc-500 hover:text-white transition-colors cursor-pointer"
+              title="Attach File"
+            >
                <Plus size={18} />
-            </div>
+            </button>
             
             <form onSubmit={handleSend} className="flex-1 flex items-center">
               <input
@@ -191,7 +201,12 @@ export default function ConversationPage() {
                 disabled={sending}
               />
               <div className="flex items-center gap-2 pr-2">
-                 <button type="button" className="w-8 h-8 flex items-center justify-center text-zinc-500 hover:text-white transition-colors">
+                 <button 
+                   type="button" 
+                   onClick={() => window.alert("[ANTIGRAVITY_OS]\n\nVOICE_RECOGNITION_MODULE_OFFLINE")}
+                   className="w-8 h-8 flex items-center justify-center text-zinc-500 hover:text-white transition-colors"
+                   title="Voice Input"
+                 >
                    <Mic size={16} />
                  </button>
                  <button

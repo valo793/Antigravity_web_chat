@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { createClient } from "@/lib/supabase/client";
+import { createClient } from "@/infrastructure/database/supabase/client";
 import { Eye, EyeOff, Copy, Shield } from "lucide-react";
 
 export default function SettingsPage() {

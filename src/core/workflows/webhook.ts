@@ -24,7 +24,7 @@ export interface ProcessWebhookContext extends WorkflowContext {
 class ValidateSignatureStage implements WorkflowStage<ProcessWebhookContext> {
   name = "ValidateSignatureStage";
   async execute(context: ProcessWebhookContext) {
-    const { verifyWebhookSignature } = await import("@/lib/webhook/verify-signature");
+    const { verifyWebhookSignature } = await import("@/infrastructure/services/webhook/verify-signature");
     
     context.signatureValid = false;
     const hasRealSecret = context.secret && context.secret !== "your-webhook-secret";
@@ -76,7 +76,7 @@ class LogEventStage implements WorkflowStage<ProcessWebhookContext> {
 class ParseWebhookPayloadStage implements WorkflowStage<ProcessWebhookContext> {
   name = "ParseWebhookPayloadStage";
   async execute(context: ProcessWebhookContext) {
-    const { parseWebhookPayload } = await import("@/lib/webhook/parse-event");
+    const { parseWebhookPayload } = await import("@/infrastructure/services/webhook/parse-event");
     context.parsedEvent = parseWebhookPayload(context.parsedJson);
   }
 }
@@ -84,7 +84,7 @@ class ParseWebhookPayloadStage implements WorkflowStage<ProcessWebhookContext> {
 class DeduplicationStage implements WorkflowStage<ProcessWebhookContext> {
   name = "DeduplicationStage";
   async execute(context: ProcessWebhookContext) {
-    const { isDuplicateEvent } = await import("@/lib/webhook/dedupe");
+    const { isDuplicateEvent } = await import("@/infrastructure/services/webhook/dedupe");
     const { updateWebhookEventStatus } = await import("@/infrastructure/database/repositories/webhook.repository");
 
     const duplicate = await isDuplicateEvent(context.supabase, context.parsedEvent.event_id);
@@ -163,7 +163,7 @@ class ProcessMessageStage implements WorkflowStage<ProcessWebhookContext> {
   async execute(context: ProcessWebhookContext) {
     const { createMessage } = await import("@/infrastructure/database/repositories/message.repository");
     const { createNotification } = await import("@/infrastructure/database/repositories/notification.repository");
-    const { shouldNotifyUser, getNotificationTitle } = await import("@/lib/webhook/parse-event");
+    const { shouldNotifyUser, getNotificationTitle } = await import("@/infrastructure/services/webhook/parse-event");
     const event = context.parsedEvent;
     
     if (event.message) {

@@ -1,4 +1,4 @@
-import { createServerSupabaseClient } from "@/lib/supabase/server";
+import { createServerSupabaseClient } from "@/infrastructure/database/supabase/server";
 import { redirect } from "next/navigation";
 import DashboardShell from "@/interfaces/ui/layout/dashboard-shell";
 

@@ -1,0 +1,39 @@
+app/(dashboard)/agents/page.tsx(4,30): error TS2307: Cannot find module '@/infrastructure/database/supabase/client' or its corresponding type declarations.
+app/(dashboard)/layout.tsx(1,44): error TS2307: Cannot find module '@/infrastructure/database/supabase/server' or its corresponding type declarations.
+app/(dashboard)/notifications/page.tsx(5,30): error TS2307: Cannot find module '@/infrastructure/database/supabase/client' or its corresponding type declarations.
+app/(dashboard)/settings/page.tsx(4,30): error TS2307: Cannot find module '@/infrastructure/database/supabase/client' or its corresponding type declarations.
+app/api/analytics/route.ts(2,44): error TS2307: Cannot find module '@/infrastructure/database/supabase/server' or its corresponding type declarations.
+app/api/analytics/route.ts(36,39): error TS7006: Parameter 'a' implicitly has an 'any' type.
+app/api/analytics/route.ts(37,53): error TS7006: Parameter 'n' implicitly has an 'any' type.
+app/api/analytics/route.ts(40,41): error TS7006: Parameter 'm' implicitly has an 'any' type.
+app/api/analytics/route.ts(41,42): error TS7006: Parameter 'm' implicitly has an 'any' type.
+app/api/analytics/route.ts(42,43): error TS7006: Parameter 'm' implicitly has an 'any' type.
+app/api/analytics/route.ts(45,48): error TS7006: Parameter 'e' implicitly has an 'any' type.
+app/api/analytics/route.ts(46,47): error TS7006: Parameter 'e' implicitly has an 'any' type.
+app/api/analytics/route.ts(47,48): error TS7006: Parameter 'e' implicitly has an 'any' type.
+app/api/analytics/route.ts(52,43): error TS7006: Parameter 'm' implicitly has an 'any' type.
+app/api/analytics/route.ts(60,27): error TS7006: Parameter 'm' implicitly has an 'any' type.
+app/api/analytics/route.ts(70,26): error TS7006: Parameter 'c' implicitly has an 'any' type.
+app/api/analytics/route.ts(75,21): error TS7006: Parameter 'm' implicitly has an 'any' type.
+app/api/analytics/route.ts(83,11): error TS7006: Parameter 'a' implicitly has an 'any' type.
+app/api/analytics/route.ts(89,49): error TS7006: Parameter 'c' implicitly has an 'any' type.
+app/api/analytics/route.ts(91,12): error TS7006: Parameter 'a' implicitly has an 'any' type.
+app/api/analytics/route.ts(91,15): error TS7006: Parameter 'b' implicitly has an 'any' type.
+app/api/analytics/route.ts(95,21): error TS7006: Parameter 'm' implicitly has an 'any' type.
+app/api/analytics/route.ts(104,38): error TS7006: Parameter 'm' implicitly has an 'any' type.
+app/api/analytics/route.ts(106,36): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+app/api/analytics/route.ts(106,41): error TS7006: Parameter 'm' implicitly has an 'any' type.
+app/api/chat/send/route.ts(2,44): error TS2307: Cannot find module '@/infrastructure/database/supabase/server' or its corresponding type declarations.
+app/api/conversations/[id]/messages/route.ts(2,44): error TS2307: Cannot find module '@/infrastructure/database/supabase/server' or its corresponding type declarations.
+app/api/conversations/route.ts(2,44): error TS2307: Cannot find module '@/infrastructure/database/supabase/server' or its corresponding type declarations.
+app/api/notifications/read/route.ts(2,44): error TS2307: Cannot find module '@/infrastructure/database/supabase/server' or its corresponding type declarations.
+app/api/notifications/route.ts(2,44): error TS2307: Cannot find module '@/infrastructure/database/supabase/server' or its corresponding type declarations.
+app/api/webhooks/antigravity/route.ts(2,35): error TS2307: Cannot find module '@/infrastructure/database/supabase/server' or its corresponding type declarations.
+app/auth/callback/route.ts(2,44): error TS2307: Cannot find module '@/infrastructure/database/supabase/server' or its corresponding type declarations.
+app/login/page.tsx(4,30): error TS2307: Cannot find module '@/infrastructure/database/supabase/client' or its corresponding type declarations.
+app/page.tsx(2,44): error TS2307: Cannot find module '@/infrastructure/database/supabase/server' or its corresponding type declarations.
+middleware.ts(1,31): error TS2307: Cannot find module '@/infrastructure/database/supabase/middleware' or its corresponding type declarations.
+src/interfaces/providers/useConversations.ts(4,30): error TS2307: Cannot find module '@/infrastructure/database/supabase/client' or its corresponding type declarations.
+src/interfaces/providers/useMessages.ts(4,30): error TS2307: Cannot find module '@/infrastructure/database/supabase/client' or its corresponding type declarations.
+src/interfaces/providers/useMessages.ts(45,10): error TS7006: Parameter 'payload' implicitly has an 'any' type.
+src/interfaces/ui/layout/dashboard-shell.tsx(17,30): error TS2307: Cannot find module '@/infrastructure/database/supabase/client' or its corresponding type declarations.

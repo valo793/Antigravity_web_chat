@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createAdminClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/infrastructure/database/supabase/server";
 import { ProcessWebhookWorkflow, ProcessWebhookContext } from "@/core/workflows/webhook";
 
 export async function POST(request: NextRequest) {

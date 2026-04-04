@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createServerSupabaseClient } from "@/lib/supabase/server";
+import { createServerSupabaseClient } from "@/infrastructure/database/supabase/server";
 import { getNotifications, getUnreadCount } from "@/infrastructure/database/repositories/notification.repository";
 
 export async function GET() {

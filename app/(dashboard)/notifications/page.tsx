@@ -2,10 +2,10 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { createClient } from "@/lib/supabase/client";
-import { timeAgo } from "@/lib/utils/dates";
+import { createClient } from "@/infrastructure/database/supabase/client";
+import { timeAgo } from "@/core/utils/dates";
 import { Check, CheckCheck, MessageSquare, AlertTriangle, Info } from "lucide-react";
-import type { Notification } from "@/types/database";
+import type { Notification } from "@/core/domain";
 
 export default function NotificationsPage() {
   const [notifications, setNotifications] = useState<Notification[]>([]);

@@ -1,44 +1,12 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { createClient } from "@/lib/supabase/client";
-import { timeAgo } from "@/lib/utils/dates";
+import { timeAgo } from "@/core/utils/dates";
 import { MessageSquare, Paperclip, Settings2, Shield } from "lucide-react";
+import { useConversations } from "@/interfaces/providers/useConversations";
 
 export default function ChatPage() {
-  const [conversations, setConversations] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  const supabase = createClient();
-
-  const fetchConversations = useCallback(async () => {
-    const res = await fetch("/api/conversations");
-    if (res.ok) {
-      const json = await res.json();
-      setConversations(json.data || []);
-    }
-    setLoading(false);
-  }, []);
-
-  useEffect(() => {
-    fetchConversations();
-
-    const channel = supabase
-      .channel("conversations-list")
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "conversations" },
-        () => fetchConversations()
-      )
-      .on(
-        "postgres_changes",
-        { event: "INSERT", schema: "public", table: "messages" },
-        () => fetchConversations()
-      )
-      .subscribe();
-
-    return () => { supabase.removeChannel(channel); };
-  }, [supabase, fetchConversations]);
+  const { conversations, loading } = useConversations();
 
   if (loading) {
     return (

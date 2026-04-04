@@ -1,63 +1,19 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
-import { formatTimestamp, timeAgo } from "@/lib/utils/dates";
+import { formatTimestamp, timeAgo } from "@/core/utils/dates";
 import { Send, Bot, Plus, Mic, ShieldAlert, Cpu } from "lucide-react";
-import type { Message } from "@/types/database";
+import { useMessages } from "@/interfaces/providers/useMessages";
 
 export default function ConversationPage() {
   const params = useParams();
   const conversationId = params.conversationId as string;
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [conversation, setConversation] = useState<any>(null);
+  
+  const { messages, conversation, loading, sendMessage } = useMessages(conversationId);
   const [inputText, setInputText] = useState("");
   const [sending, setSending] = useState(false);
-  const [loading, setLoading] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const supabase = createClient();
-
-  const fetchMessages = useCallback(async () => {
-    const res = await fetch(`/api/conversations/${conversationId}/messages`);
-    if (res.ok) {
-      const json = await res.json();
-      setMessages(json.data || []);
-    }
-  }, [conversationId]);
-
-  const fetchConversation = useCallback(async () => {
-    const res = await fetch("/api/conversations");
-    if (res.ok) {
-      const json = await res.json();
-      const conv = (json.data || []).find((c: any) => c.id === conversationId);
-      setConversation(conv);
-    }
-  }, [conversationId]);
-
-  useEffect(() => {
-    Promise.all([fetchMessages(), fetchConversation()]).then(() =>
-      setLoading(false)
-    );
-
-    const channel = supabase
-      .channel(`conversation-${conversationId}`)
-      .on(
-        "postgres_changes",
-        {
-          event: "INSERT",
-          schema: "public",
-          table: "messages",
-          filter: `conversation_id=eq.${conversationId}`,
-        },
-        (payload) => {
-          setMessages((prev) => [...prev, payload.new as Message]);
-        }
-      )
-      .subscribe();
-
-    return () => { supabase.removeChannel(channel); };
-  }, [conversationId, supabase, fetchMessages, fetchConversation]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -69,18 +25,9 @@ export default function ConversationPage() {
 
     setSending(true);
     try {
-      const res = await fetch("/api/chat/send", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          conversation_id: conversationId,
-          content: inputText.trim(),
-        }),
-      });
-
-      if (res.ok) {
+      const success = await sendMessage(inputText);
+      if (success) {
         setInputText("");
-        setTimeout(fetchMessages, 500);
       }
     } finally {
       setSending(false);

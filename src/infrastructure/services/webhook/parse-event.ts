@@ -1,4 +1,4 @@
-import { WebhookPayloadSchema, type WebhookPayload } from "@/types/webhook";
+import { WebhookPayloadSchema, type WebhookPayload } from "@/core/domain/webhook";
 
 /**
  * Parse and validate incoming webhook payload.

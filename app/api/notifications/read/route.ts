@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
-import { markNotificationsRead } from "@/lib/db/queries";
+import { markNotificationsRead } from "@/infrastructure/database/repositories/notification.repository";
 
 export async function POST(request: NextRequest) {
   const supabase = await createServerSupabaseClient();

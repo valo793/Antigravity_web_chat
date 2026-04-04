@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
-import { getConversationById, getMessages } from "@/lib/db/queries";
+import { getConversationById } from "@/infrastructure/database/repositories/conversation.repository";
+import { getMessages } from "@/infrastructure/database/repositories/message.repository";
 
 export async function GET(
   request: NextRequest,

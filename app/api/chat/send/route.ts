@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
-import { getConversationById, createMessage } from "@/lib/db/queries";
+import { getConversationById } from "@/infrastructure/database/repositories/conversation.repository";
+import { createMessage } from "@/infrastructure/database/repositories/message.repository";
 
 export async function POST(request: NextRequest) {
   const supabase = await createServerSupabaseClient();

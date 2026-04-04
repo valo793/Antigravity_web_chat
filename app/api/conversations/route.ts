@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
-import { getConversations } from "@/lib/db/queries";
+import { getConversations } from "@/infrastructure/database/repositories/conversation.repository";
 
 export async function GET() {
   const supabase = await createServerSupabaseClient();

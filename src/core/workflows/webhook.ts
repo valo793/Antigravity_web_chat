@@ -57,7 +57,7 @@ class ParseJSONStage implements WorkflowStage<ProcessWebhookContext> {
 class LogEventStage implements WorkflowStage<ProcessWebhookContext> {
   name = "LogEventStage";
   async execute(context: ProcessWebhookContext) {
-    const { createWebhookEvent } = await import("@/lib/db/queries");
+    const { createWebhookEvent } = await import("@/infrastructure/database/repositories/webhook.repository");
     
     try {
       context.webhookEventId = await createWebhookEvent(context.supabase, {
@@ -85,7 +85,7 @@ class DeduplicationStage implements WorkflowStage<ProcessWebhookContext> {
   name = "DeduplicationStage";
   async execute(context: ProcessWebhookContext) {
     const { isDuplicateEvent } = await import("@/lib/webhook/dedupe");
-    const { updateWebhookEventStatus } = await import("@/lib/db/queries");
+    const { updateWebhookEventStatus } = await import("@/infrastructure/database/repositories/webhook.repository");
 
     const duplicate = await isDuplicateEvent(context.supabase, context.parsedEvent.event_id);
     if (duplicate) {
@@ -107,7 +107,7 @@ class DeduplicationStage implements WorkflowStage<ProcessWebhookContext> {
 class ResolveAgentStage implements WorkflowStage<ProcessWebhookContext> {
   name = "ResolveAgentStage";
   async execute(context: ProcessWebhookContext) {
-    const { getOrCreateAgent } = await import("@/lib/db/queries");
+    const { getOrCreateAgent } = await import("@/infrastructure/database/repositories/agent.repository");
     context.agent = await getOrCreateAgent(context.supabase, context.parsedEvent.agent_slug);
   }
 }
@@ -130,7 +130,8 @@ class ResolveUserStage implements WorkflowStage<ProcessWebhookContext> {
 class ResolveConversationStage implements WorkflowStage<ProcessWebhookContext> {
   name = "ResolveConversationStage";
   async execute(context: ProcessWebhookContext) {
-    const { getConversationByExternalThread, createConversation, createNotification } = await import("@/lib/db/queries");
+    const { getConversationByExternalThread, createConversation } = await import("@/infrastructure/database/repositories/conversation.repository");
+    const { createNotification } = await import("@/infrastructure/database/repositories/notification.repository");
     
     let conversation = await getConversationByExternalThread(
       context.supabase,
@@ -160,7 +161,8 @@ class ResolveConversationStage implements WorkflowStage<ProcessWebhookContext> {
 class ProcessMessageStage implements WorkflowStage<ProcessWebhookContext> {
   name = "ProcessMessageStage";
   async execute(context: ProcessWebhookContext) {
-    const { createMessage, createNotification } = await import("@/lib/db/queries");
+    const { createMessage } = await import("@/infrastructure/database/repositories/message.repository");
+    const { createNotification } = await import("@/infrastructure/database/repositories/notification.repository");
     const { shouldNotifyUser, getNotificationTitle } = await import("@/lib/webhook/parse-event");
     const event = context.parsedEvent;
     
@@ -198,7 +200,7 @@ class ProcessMessageStage implements WorkflowStage<ProcessWebhookContext> {
 class MarkSuccessStage implements WorkflowStage<ProcessWebhookContext> {
   name = "MarkSuccessStage";
   async execute(context: ProcessWebhookContext) {
-    const { updateWebhookEventStatus } = await import("@/lib/db/queries");
+    const { updateWebhookEventStatus } = await import("@/infrastructure/database/repositories/webhook.repository");
     if (context.webhookEventId) {
        await updateWebhookEventStatus(context.supabase, context.webhookEventId, "success");
     }
@@ -239,7 +241,7 @@ export class ProcessWebhookWorkflow extends BaseWorkflow<ProcessWebhookContext> 
       // Update webhook event if it failed
       if (this.context.webhookEventId && !this.context.httpResponse) {
          try {
-           const { updateWebhookEventStatus } = await import("@/lib/db/queries");
+           const { updateWebhookEventStatus } = await import("@/infrastructure/database/repositories/webhook.repository");
            await updateWebhookEventStatus(this.context.supabase, this.context.webhookEventId, "failed", error.message);
          } catch (e) {
            console.error("Failed to mark webhook event as failed inside workflow catch block.", e);

@@ -1,4 +1,5 @@
 import { BaseWorkflow, WorkflowContext, WorkflowStage } from "./base";
+import { logger } from "@/core/utils/logger";
 
 export interface ProcessWebhookContext extends WorkflowContext {
   supabase: any; // Using any for now to avoid coupling heavily in Sprint 2, will refine later
@@ -236,7 +237,7 @@ export class ProcessWebhookWorkflow extends BaseWorkflow<ProcessWebhookContext> 
         return this.context;
       }
       
-      console.error("[Workflow Error]", error);
+      logger.error("Workflow error out", error);
       
       // Update webhook event if it failed
       if (this.context.webhookEventId && !this.context.httpResponse) {
@@ -244,7 +245,7 @@ export class ProcessWebhookWorkflow extends BaseWorkflow<ProcessWebhookContext> 
            const { updateWebhookEventStatus } = await import("@/infrastructure/database/repositories/webhook.repository");
            await updateWebhookEventStatus(this.context.supabase, this.context.webhookEventId, "failed", error.message);
          } catch (e) {
-           console.error("Failed to mark webhook event as failed inside workflow catch block.", e);
+           logger.error("Failed to mark webhook event as failed inside workflow catch block.", e);
          }
       }
       

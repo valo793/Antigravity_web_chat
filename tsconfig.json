@@ -15,7 +15,10 @@
     "incremental": true,
     "plugins": [{ "name": "next" }],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@/core/*": ["./src/core/*"],
+      "@/infrastructure/*": ["./src/infrastructure/*"],
+      "@/interfaces/*": ["./src/interfaces/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

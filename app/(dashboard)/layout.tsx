@@ -1,6 +1,6 @@
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
-import DashboardShell from "@/components/layout/dashboard-shell";
+import DashboardShell from "@/interfaces/ui/layout/dashboard-shell";
 
 export const dynamic = "force-dynamic";
 
